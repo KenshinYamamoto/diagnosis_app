@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import './question.dart';
-import './answer.dart';
+import './quiz.dart';
+import './result.dart';
 
 // void main() {
 //   runApp(MyApp()); // runAppの中でMyAppをインスタンス化する
@@ -17,55 +17,70 @@ class _MyApp extends StatefulWidget {
 }
 
 class MyAppState extends State<_MyApp> {
-  int questionIndex = 0;
+  int _questionIndex = 0;
+  int _totalScore = 0;
 
-  void _answerQuestion() {
+  final List<Map<String, Object>> _questions = const [
+    {
+      'questionText': 'What\'s your favorite color?',
+      'answers': [
+        {'text': 'Black', 'score': 10},
+        {'text': 'Red', 'score': 6},
+        {'text': 'Green', 'score': 4},
+        {'text': 'White', 'score': 1}
+      ],
+    },
+    {
+      'questionText': 'What\'s your favorite animal?',
+      'answers': [
+        {'text': 'Rabbit', 'score': 1},
+        {'text': 'Snake', 'score': 8},
+        {'text': 'Elephant', 'score': 5},
+        {'text': 'Lion', 'score': 6}
+      ],
+    },
+    {
+      'questionText': 'What\'s your favorite game?',
+      'answers': [
+        {'text': 'Killing', 'score': 10},
+        {'text': 'Roll Playing', 'score': 3},
+        {'text': 'Fantasy', 'score': 5},
+        {'text': 'Pazzle', 'score': 4}
+      ],
+    },
+  ];
+
+  void _answerQuestion(int score) {
+    _totalScore += score;
     setState(() {
       // 変化するものをsetState内に入れる。そうすると、状態が保持される。(StatefulWidgetでのみ使用可能)
-      questionIndex++;
+      _questionIndex++;
     });
-    print(questionIndex);
+    print(_questionIndex);
+  }
+
+  void _resetQuiz() {
+    // 変数を変化させるので、setState内に記述することを忘れないでください。
+    setState(() {
+      _questionIndex = 0;
+      _totalScore = 0;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    List<Map<String, Object>> questions = [
-      {
-        'questionText': 'What\'s your favorite color?',
-        'answers': ['Black', 'Red', 'Green', 'White'],
-      },
-      {
-        'questionText': 'What\'s your favorite animal?',
-        'answers': ['Rabbit', 'Snake', 'Elephant', 'Lion'],
-      },
-      {
-        'questionText': 'Who\'s your favorite instructor?',
-        'answers': ['Max', 'Max', 'Max', 'Max'],
-      },
-    ];
-
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text('My First App'),
         ),
-        body: Column(
-          // Columnで縦並び、Rowで横並び
-          children: [
-            // Columnでは、childrenの名前付き引数で、Listを渡す
-            // Questionウィジェットに質問文(文字列)を渡す
-            // この書き方で、List<Map<String, Object>>からkey指定してvalueを取ってくることが可能である。
-            Question(questions[questionIndex]['questionText']),
-            // Answerウィジェットに答えの文字列をmapで渡す
-            // questionsのquestionIndex番号のMapの中から、answersをkeyとして持つものをList<String>として取得し、mapで回し、1つずつAnswerに渡す
-            // スプレッド演算子で、Answerから返ってきたボタンを1つずつこのbodyのchildrenに追加する
-            ...(questions[questionIndex]['answers'] as List<String>)
-                .map((answer) {
-              return Answer(_answerQuestion,
-                  answer); // Answerに渡すのはあくまで関数の「ポインタ」。なので、Answer側からquestionIndexにアクセス可能
-            }).toList() // これがリストであることを確認してから生成されたAnswerWidgetをChildrenに追加する。その為のtoList()
-          ],
-        ),
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                answerQuestion: _answerQuestion,
+                questionIndex: _questionIndex,
+                questions: _questions,
+              )
+            : Result(_totalScore, _resetQuiz),
       ),
     );
   }
