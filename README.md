@@ -1,16 +1,14 @@
-# flutter_complete_guide
+# 診断アプリ
 
-A new Flutter project.
+初めて私がFlutterを使用して作成したアプリケーション
 
-## Getting Started
+## デモ
 
-This project is a starting point for a Flutter application.
+![デモアプリケーション](/assets/ExplanationPicture.png)
 
-A few resources to get you started if this is your first Flutter project:
+- 3問の質問を表示し、ユーザの回答に応じて診断結果を表示する
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+## 学んだこと　　
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- 基本的なウィジェットの使い方
+- setStateを使用した状態管理方法
